@@ -56,25 +56,25 @@
       flex: 1;
     }
 
- .checkbox-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px 30px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 20px;
-  border: 2px solid #ccc;
-  margin-top: 5px;
-}
+    .checkbox-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px 30px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 20px;
+      border: 2px solid #ccc;
+      margin-top: 5px;
+    }
 
-.checkbox-container label {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 15px;
-  font-weight: 200;
-  cursor: pointer;
-}
+    .checkbox-container label {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 15px;
+      font-weight: 200;
+      cursor: pointer;
+    }
 
     .time-slots {
       display: grid;
@@ -119,6 +119,16 @@
       color: rgb(1, 0, 0);
       margin-top: 15px;
     }
+
+    .success-message {
+      text-align: center;
+      font-size: 22px;
+      color: #155724;
+      background-color: #d4edda;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -126,7 +136,7 @@
     <h2>Connect With Experts</h2>
     <p class="sub">Schedule Free Home Inspections</p>
 
-    <form action="https://script.google.com/macros/s/AKfycbxf3eJoG0S4xL3mLUAyqYxdrof1cRDASBNwSIApWKpwUBYYYkXS4b3acozjY6GqHdvw2g/exec" method="POST">
+    <form id="customer-form">
       <div class="row">
         <div>
           <label for="firstName">First Name</label>
@@ -145,14 +155,14 @@
       <input type="tel" name="phone" placeholder="+91 " pattern="[0-9]{10}" required />
 
       <label for="requirements"><strong>Requirements</strong></label>
-<div class="checkbox-container">
-  <label><input type="checkbox" name="requirements" value="Painting Service"> Painting Service</label>
-  <label><input type="checkbox" name="requirements" value="Cleaning Service"> Cleaning Service</label>
-  <label><input type="checkbox" name="requirements" value="Electrical Service"> Electrical Service</label>
-  <label><input type="checkbox" name="requirements" value="Carpentry Service"> Carpentry Service</label>
-  <label><input type="checkbox" name="requirements" value="Home Renovation Service"> Home Renovation Service</label>
-  <label><input type="checkbox" name="requirements" value="Home / Site Inspection"> Home / Site Inspection</label>
-</div>
+      <div class="checkbox-container">
+        <label><input type="checkbox" name="requirements" value="Painting Service"> Painting Service</label>
+        <label><input type="checkbox" name="requirements" value="Cleaning Service"> Cleaning Service</label>
+        <label><input type="checkbox" name="requirements" value="Electrical Service"> Electrical Service</label>
+        <label><input type="checkbox" name="requirements" value="Carpentry Service"> Carpentry Service</label>
+        <label><input type="checkbox" name="requirements" value="Home Renovation Service"> Home Renovation Service</label>
+        <label><input type="checkbox" name="requirements" value="Home / Site Inspection"> Home / Site Inspection</label>
+      </div>
 
       <label for="appointmentDate">Appointment Date</label>
       <input type="date" name="appointmentDate" required />
@@ -173,6 +183,8 @@
         📍 Asia/Calcutta (<span id="local-time"></span>)
       </div>
     </form>
+
+    <div id="response" class="success-message" style="display: none;"></div>
   </div>
 
   <script>
@@ -183,6 +195,32 @@
       minute: '2-digit'
     });
     document.getElementById('local-time').textContent = now;
+
+    // Handle form submission
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxf3eJoG0S4xL3mLUAyqYxdrof1cRDASBNwSIApWKpwUBYYYkXS4b3acozjY6GqHdvw2g/exec";
+    const form = document.getElementById("customer-form");
+    const responseDiv = document.getElementById("response");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      fetch(scriptURL, { method: "POST", body: formData })
+        .then(response => {
+          if (response.ok) {
+            form.style.display = "none";
+            responseDiv.style.display = "block";
+            responseDiv.innerHTML = "✅ Thank you! We’ll contact you shortly.";
+          } else {
+            throw new Error("Network response was not ok.");
+          }
+        })
+        .catch(error => {
+          responseDiv.style.display = "block";
+          responseDiv.innerHTML = "⚠️ Something went wrong. Please try again.";
+        });
+    });
   </script>
 </body>
 </html>
