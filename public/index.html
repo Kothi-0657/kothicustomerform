@@ -1,20 +1,31 @@
-<!-- public/form.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Connect With Experts</title>
   <style>
+    /* Background Video Styles */
+    #background-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
     body {
       font-family: "Segoe UI", sans-serif;
-      background-color: #f5f6ff;
       display: flex;
       justify-content: center;
       padding: 40px;
+      margin: 0;
+      background: transparent;
     }
 
     .container {
-      background-color: rgb(219, 153, 67);
+      background-color: rgba(219, 153, 67, 0.92); /* Semi-transparent to show video */
       border-radius: 20px;
       padding: 30px 60px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -132,6 +143,13 @@
   </style>
 </head>
 <body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop id="background-video">
+    <source src="background.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
   <div class="container">
     <h2>Connect With Experts</h2>
     <p class="sub">Schedule Free Home Inspections</p>
@@ -203,9 +221,7 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
-
       fetch(scriptURL, { method: "POST", body: formData })
         .then(response => {
           if (response.ok) {
